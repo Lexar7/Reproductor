@@ -10,7 +10,7 @@ import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity {
 
-
+//Comment
     Button play_pause, btn_repetir;
     MediaPlayer mp;
     ImageView iv;
@@ -23,9 +23,9 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        play_pause = (Button)findViewById(R.id.btn_play);
-        btn_repetir = (Button)findViewById(R.id.btn_repetir);
-        iv = (ImageView)findViewById(R.id.imageView);
+        play_pause = findViewById(R.id.btn_play);
+        btn_repetir = findViewById(R.id.btn_repetir);
+        iv = findViewById(R.id.imageView);
 
         vectormp[0] = MediaPlayer.create(this, R.raw.race);
         vectormp[1] = MediaPlayer.create(this, R.raw.sound);
