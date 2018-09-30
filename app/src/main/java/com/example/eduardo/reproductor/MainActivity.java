@@ -10,7 +10,6 @@ import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity {
 
-//Comment
     Button play_pause, btn_repetir;
     MediaPlayer mp;
     ImageView iv;
