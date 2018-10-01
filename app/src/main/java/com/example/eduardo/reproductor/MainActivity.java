@@ -27,9 +27,9 @@ public class MainActivity extends AppCompatActivity {
         btn_repetir = (Button)findViewById(R.id.btn_repetir);
         iv = (ImageView)findViewById(R.id.imageView);
 
-        vectormp[0] = MediaPlayer.create(this, R.raw.race);
-        vectormp[1] = MediaPlayer.create(this, R.raw.sound);
-        vectormp[2] = MediaPlayer.create(this, R.raw.tea);
+        //vectormp[0] = MediaPlayer.create(this, R.raw.race);
+        //vectormp[1] = MediaPlayer.create(this, R.raw.sound);
+        //vectormp[2] = MediaPlayer.create(this, R.raw.tea);
     }
 
     //Metodo para el boton PlayPause
@@ -51,9 +51,9 @@ public class MainActivity extends AppCompatActivity {
         if (vectormp[posicion] != null){
             vectormp[posicion].stop();
 
-            vectormp[0] = MediaPlayer.create(this, R.raw.race);
-            vectormp[1] = MediaPlayer.create(this, R.raw.sound);
-            vectormp[2] = MediaPlayer.create(this, R.raw.tea);
+            //vectormp[0] = MediaPlayer.create(this, R.raw.race);
+            //vectormp[1] = MediaPlayer.create(this, R.raw.sound);
+            //vectormp[2] = MediaPlayer.create(this, R.raw.tea);
             posicion = 0;
 
             play_pause.setBackgroundResource(R.drawable.reproducir);
@@ -119,9 +119,9 @@ public class MainActivity extends AppCompatActivity {
 
             if (vectormp[posicion].isPlaying()){
                 vectormp[posicion].stop();
-                vectormp[0] = MediaPlayer.create(this, R.raw.race);
-                vectormp[1] = MediaPlayer.create(this, R.raw.sound);
-                vectormp[2] = MediaPlayer.create(this, R.raw.tea);
+                //vectormp[0] = MediaPlayer.create(this, R.raw.race);
+               // vectormp[1] = MediaPlayer.create(this, R.raw.sound);
+                //vectormp[2] = MediaPlayer.create(this, R.raw.tea);
                 posicion--;
 
                 if (posicion == 0){
