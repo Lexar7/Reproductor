@@ -5,6 +5,7 @@ import android.content.ContentResolver;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.net.Uri;
+import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
@@ -17,6 +18,9 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import com.obsez.android.lib.filechooser.ChooserDialog;
+
+import java.io.File;
 import java.util.ArrayList;
 
 public class Explorador extends AppCompatActivity {
@@ -55,7 +59,7 @@ public class Explorador extends AppCompatActivity {
     }
 
     public void doStuff(){
-        listaCanciones = (ListView)findViewById(R.id.lv);
+        listaCanciones = findViewById(R.id.lv);
         arrayList = new ArrayList<>();
         obtenerMusica();
 
@@ -107,5 +111,20 @@ public class Explorador extends AppCompatActivity {
             }
         }
 
+    }
+
+    //Metodo para buscar archivos
+    public void openFile(View view){
+        new ChooserDialog().with(this)
+                .withFilter(false, false, "mp3", "wma", "wav", "jpg")// para agregar mas formatos solo agregar un nuevo elemento despues de "wav" eje: "wav", "mp4" ....
+                .withStartFile(Environment.getExternalStorageDirectory().getPath()) // ruta en la que inicia el buscador
+                .withChosenListener(new ChooserDialog.Result() {
+                    @Override
+                    public void onChoosePath(String path, File pathFile) {
+                        Toast.makeText(Explorador.this, "FILE: " + path, Toast.LENGTH_SHORT).show();
+                    }
+                })
+                .build()
+                .show();
     }
 }
