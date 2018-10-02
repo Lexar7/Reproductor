@@ -7,6 +7,9 @@ import android.os.Handler;
 import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.ContextMenu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -58,10 +61,10 @@ public class Explorador extends AppCompatActivity {
         for (int i = 0; i < fields.length; i++){
             list.add(fields[i].getName());
         }
-
-
         adapter = new ArrayAdapter<>(this, R.layout.list_view_configuracion, list);
         listaCanciones.setAdapter(adapter);
+        registerForContextMenu(listaCanciones);
+
 
         listaCanciones.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -129,6 +132,60 @@ public class Explorador extends AppCompatActivity {
         });
 
     }
+    ////////////////// MENU CONTEXTUAL //////////////////////////////////////
+    @Override
+    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
+        super.onCreateContextMenu(menu, v, menuInfo);
+
+
+        final MenuInflater inflater = getMenuInflater();
+
+        if(v.getId() == R.id.lv){
+
+            AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) menuInfo;
+            menu.setHeaderTitle(listaCanciones.getAdapter().getItem(info.position).toString());
+
+            inflater.inflate(R.menu.menu, menu);
+        }
+    }
+    public boolean onContextItemSelected(MenuItem item){
+        AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
+
+        switch (item.getItemId()){
+          //Reproducir
+            case R.id.CtxtstOpc1:
+                Mensaje();
+                return true;
+            //Pausar
+            case R.id.CtxtstOpc2:
+                Mensaje();
+                return true;
+            //Detener
+            case R.id.CtxtstOpc3:
+                Mensaje();
+                return true;
+            default:
+                return super.onContextItemSelected(item);
+        }
+
+    }
+    public void Mensaje()
+    {
+        Toast toast = Toast.makeText(this, "Menu Opcion", Toast.LENGTH_SHORT);
+        toast.show();
+    }
+    public void Reproducir(){
+
+    }
+    public void Pausar(){
+
+    }
+    public void Detener(){
+
+    }
+
+  //////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 
     private Handler handler = new Handler(){
         @Override
@@ -145,7 +202,6 @@ public class Explorador extends AppCompatActivity {
             TiempoFinal.setText("- " + remainingTime);
         }
     };
-
     public String createTimeLabel(int time){
         String timeLabel = "";
         int min = time / 1000 / 60;
@@ -170,6 +226,7 @@ public class Explorador extends AppCompatActivity {
             Toast.makeText(this, "Reproduciendo", Toast.LENGTH_SHORT).show();
         }
     }
+
 
     //Metodo para boton Siguiente
     public void Siguiente(View view){

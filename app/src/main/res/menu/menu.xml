@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:id="@+id/CtxtstOpc1"
+        android:title="Reproducir" />
+    <item
+        android:id="@+id/CtxtstOpc2"
+        android:title="Pausar" />
+    <item
+        android:id="@+id/CtxtstOpc3"
+        android:title="Detener" />
+</menu>
