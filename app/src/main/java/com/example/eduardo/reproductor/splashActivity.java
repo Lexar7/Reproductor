@@ -7,7 +7,7 @@ import android.os.Bundle;
 
 public class splashActivity extends AppCompatActivity {
     private Boolean botonBackPresionado=false;
-    private static  final int DURACION_SPLASF=2000;
+    private static  final int DURACION_SPLASF=5000;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

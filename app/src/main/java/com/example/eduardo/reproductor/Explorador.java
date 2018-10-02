@@ -22,6 +22,8 @@ import android.widget.Toast;
 
 //import com.obsez.android.lib.filechooser.ChooserDialog;
 
+import com.obsez.android.lib.filechooser.ChooserDialog;
+
 import org.w3c.dom.Text;
 
 import java.io.File;
@@ -63,6 +65,7 @@ public class Explorador extends AppCompatActivity {
         }
         adapter = new ArrayAdapter<>(this, R.layout.list_view_configuracion, list);
         listaCanciones.setAdapter(adapter);
+
         registerForContextMenu(listaCanciones);
 
 
@@ -123,6 +126,9 @@ public class Explorador extends AppCompatActivity {
                                 msg.what = mp.getCurrentPosition();
                                 handler.sendMessage(msg);
                                 Thread.sleep(1000);
+
+                                listaCanciones.invalidateViews();
+                                listaCanciones.refreshDrawableState();
                             } catch (InterruptedException e){
                             }
                         }
@@ -154,37 +160,47 @@ public class Explorador extends AppCompatActivity {
         switch (item.getItemId()){
           //Reproducir
             case R.id.CtxtstOpc1:
-                Mensaje();
+                if(mp != null ){
+                    mp.stop();
+                    mp.release();
+                }
+                Uri u = Uri.parse(list.get(posicion));
+                mp = MediaPlayer.create(Explorador.this, u);
+                mp.start();
+                play_pause.setBackgroundResource(R.drawable.pausa);
+
                 return true;
             //Pausar
             case R.id.CtxtstOpc2:
-                Mensaje();
+                if(mp != null ){
+                    mp.stop();
+                    mp.release();
+                }
+                int id2 = getResources().getIdentifier(list.get(posicion), "raw", getPackageName());
+                mp = MediaPlayer.create(Explorador.this, id2);
+                mp.pause();
+                play_pause.setBackgroundResource(R.drawable.reproducir);
+
                 return true;
             //Detener
             case R.id.CtxtstOpc3:
-                Mensaje();
+                if(mp != null ){
+                    mp.stop();
+                    mp.release();
+                }
+                int id3 = getResources().getIdentifier(list.get(posicion), "raw", getPackageName());
+                mp = MediaPlayer.create(Explorador.this, id3);
+                mp.stop();
+
+                play_pause.setBackgroundResource(R.drawable.reproducir);
+
                 return true;
             default:
                 return super.onContextItemSelected(item);
         }
 
     }
-    public void Mensaje()
-    {
-        Toast toast = Toast.makeText(this, "Menu Opcion", Toast.LENGTH_SHORT);
-        toast.show();
-    }
-    public void Reproducir(){
 
-    }
-    public void Pausar(){
-
-    }
-    public void Detener(){
-
-    }
-
-  //////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
     private Handler handler = new Handler(){
@@ -256,7 +272,7 @@ public class Explorador extends AppCompatActivity {
     }
 
     //Metodo para buscar archivos
-   /* public void openFile(View view){
+    public void openFile(View view){
         new ChooserDialog().with(this)
                 .withFilter(false, false, "mp3", "wma", "wav", "jpg")// para agregar mas formatos solo agregar un nuevo elemento despues de "wav" eje: "wav", "mp4" ....
                 .withStartFile(Environment.getExternalStorageDirectory().getPath()) // ruta en la que inicia el buscador
@@ -264,10 +280,11 @@ public class Explorador extends AppCompatActivity {
                     @Override
                     public void onChoosePath(String path, File pathFile) {
                         Toast.makeText(Explorador.this, "FILE: " + path, Toast.LENGTH_SHORT).show();
+                        list.add(path);
                     }
                 })
                 .build()
                 .show();
-    }*/
+    }
 
 }
