@@ -126,9 +126,6 @@ public class Explorador extends AppCompatActivity {
                                 msg.what = mp.getCurrentPosition();
                                 handler.sendMessage(msg);
                                 Thread.sleep(1000);
-
-                                listaCanciones.invalidateViews();
-                                listaCanciones.refreshDrawableState();
                             } catch (InterruptedException e){
                             }
                         }
@@ -164,7 +161,7 @@ public class Explorador extends AppCompatActivity {
                     mp.stop();
                     mp.release();
                 }
-                Uri u = Uri.parse(list.get(posicion));
+                Uri u = Uri.parse(list.get(posicion).toString());
                 mp = MediaPlayer.create(Explorador.this, u);
                 mp.start();
                 play_pause.setBackgroundResource(R.drawable.pausa);
@@ -280,7 +277,6 @@ public class Explorador extends AppCompatActivity {
                     @Override
                     public void onChoosePath(String path, File pathFile) {
                         Toast.makeText(Explorador.this, "FILE: " + path, Toast.LENGTH_SHORT).show();
-                        list.add(path);
                     }
                 })
                 .build()
