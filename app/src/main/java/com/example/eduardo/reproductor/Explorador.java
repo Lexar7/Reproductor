@@ -1,19 +1,10 @@
 package com.example.eduardo.reproductor;
 
-import android.Manifest;
-import android.content.ContentResolver;
-import android.content.Intent;
-import android.content.pm.PackageManager;
-import android.database.Cursor;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
-import android.provider.MediaStore;
-import android.support.annotation.NonNull;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -42,6 +33,7 @@ public class Explorador extends AppCompatActivity {
     ListAdapter adapter;
 
     MediaPlayer mp;
+
 
     int posicion = 0;
     Button play_pause, btn_repetir;
@@ -181,44 +173,29 @@ public class Explorador extends AppCompatActivity {
 
     //Metodo para boton Siguiente
     public void Siguiente(View view){
-        if (posicion < list.size() -1){
+        mp.stop();
+        mp.release();
+        posicion = (posicion + 1)%list.size();
+        int u = getResources().getIdentifier(list.get(posicion), "raw", getPackageName());
+        mp = MediaPlayer.create(getApplicationContext(), u);
+        mp.start();
 
-            if(mp.isPlaying()){
-                mp.stop();
-                posicion++;
-                int resID = getResources().getIdentifier(list.get(posicion), "raw", getPackageName());
-                mp = MediaPlayer.create(Explorador.this, resID);
-                mp.start();
-            }
-            else {
-                posicion++;
-            }
-        }
-        else {
-            Toast.makeText(this, "No hay más canciones", Toast.LENGTH_SHORT).show();
-        }
     }
 
     //Metodo para boton Anterior
     public void Anterior(View view){
-        if (posicion >= 1){
-
-            if (mp.isPlaying()){
-                mp.stop();
-                posicion--;
-                int resID = getResources().getIdentifier(list.get(posicion), "raw", getPackageName());
-                mp = MediaPlayer.create(Explorador.this, resID);
-                mp.start();
-
-            }else{
-                posicion--;
-
-            }
-
-        }
-        else{
-            Toast.makeText(this, "No hay más canciones", Toast.LENGTH_SHORT).show();
-        }
+        mp.stop();
+        mp.release();
+        posicion = (posicion - 1 < 0)? list.size() - 1: posicion-1;
+                /*if(position - 1 < 0 ){
+                    position = mySongs.size()-1;
+                }
+                else {
+                    position = position - 1;
+                }*/
+        int u = getResources().getIdentifier(list.get(posicion), "raw", getPackageName());
+        mp = MediaPlayer.create(getApplicationContext(), u);
+        mp.start();
     }
 
     //Metodo para buscar archivos
