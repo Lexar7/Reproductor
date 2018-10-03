@@ -151,7 +151,6 @@
         android:layout_marginEnd="8dp"
         android:layout_marginTop="12dp"
         android:background="@drawable/menu"
-        android:onClick="openFile"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         android:onClick="openFile"/>
