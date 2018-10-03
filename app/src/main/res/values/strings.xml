@@ -2,5 +2,6 @@
     <string name="app_name">Reproductor</string>
     <string name="titulo">Seleccione una canción</string>
     <string name="tituloPantalla">Canciones</string>
+    <string name="opcAgregar">Agregar Cancion</string>
 
 </resources>

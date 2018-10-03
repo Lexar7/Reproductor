@@ -1,10 +1,12 @@
 package com.example.eduardo.reproductor;
 
+import android.content.SharedPreferences;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
+import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.ContextMenu;
@@ -20,7 +22,7 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-//import com.obsez.android.lib.filechooser.ChooserDialog;
+import com.obsez.android.lib.filechooser.ChooserDialog;
 
 import org.w3c.dom.Text;
 
@@ -33,9 +35,19 @@ public class Explorador extends AppCompatActivity {
 
     ListView listaCanciones;
     List<String> list;
+    List<String> listPath;
     ListAdapter adapter;
 
+    //PlayList playList;
     MediaPlayer mp;
+
+    //Shared Preferences
+    private final String fileName = "myPlaylist";
+    private final String fileNamePath = "myPlaylistPath";
+    private SharedPreferences myPlaylist;
+    private SharedPreferences.Editor myEditor;
+    private SharedPreferences myPlaylistP;
+    private SharedPreferences.Editor myEditorP;
 
 
     int posicion = 0;
@@ -49,6 +61,12 @@ public class Explorador extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_explorador);
 
+        //playList= new PlayList();
+        myPlaylist = getSharedPreferences(fileName, 0);
+        myEditor = myPlaylist.edit();
+        myPlaylistP = getSharedPreferences(fileNamePath, 0);
+        myEditorP = myPlaylistP.edit();
+
         play_pause = (Button)findViewById(R.id.btnPlay_Pause);
         listaCanciones = findViewById(R.id.lv);
         TiempoInicio = (TextView)findViewById(R.id.txtTiempoInicio);
@@ -56,11 +74,16 @@ public class Explorador extends AppCompatActivity {
         titulo = (TextView)findViewById(R.id.txtTitulo);
 
         list = new ArrayList<>();
+        listPath = new ArrayList<>();
 
         Field[] fields = R.raw.class.getFields();
         for (int i = 0; i < fields.length; i++){
             list.add(fields[i].getName());
+            listPath.add(fields[i].getName());
         }
+        save(list, listPath,1);
+        listPath=loadP();
+        list = load();
         adapter = new ArrayAdapter<>(this, R.layout.list_view_configuracion, list);
         listaCanciones.setAdapter(adapter);
         registerForContextMenu(listaCanciones);
@@ -75,6 +98,7 @@ public class Explorador extends AppCompatActivity {
                 }
 
                 int resID = getResources().getIdentifier(list.get(i), "raw", getPackageName());
+
                 mp = MediaPlayer.create(Explorador.this, resID);
                 mp.start();
                 play_pause.setBackgroundResource(R.drawable.pausa);
@@ -90,7 +114,7 @@ public class Explorador extends AppCompatActivity {
                 totalTime = mp.getDuration();
 
                 //Position Bar
-                positionBar = (SeekBar)findViewById(R.id.positionBar);
+                positionBar =  findViewById(R.id.positionBar);
                 positionBar.setMax(totalTime);
                 positionBar.setOnSeekBarChangeListener(
                         new SeekBar.OnSeekBarChangeListener() {
@@ -256,18 +280,82 @@ public class Explorador extends AppCompatActivity {
     }
 
     //Metodo para buscar archivos
-   /* public void openFile(View view){
+    public void openFile(View view){
         new ChooserDialog().with(this)
                 .withFilter(false, false, "mp3", "wma", "wav", "jpg")// para agregar mas formatos solo agregar un nuevo elemento despues de "wav" eje: "wav", "mp4" ....
                 .withStartFile(Environment.getExternalStorageDirectory().getPath()) // ruta en la que inicia el buscador
                 .withChosenListener(new ChooserDialog.Result() {
                     @Override
                     public void onChoosePath(String path, File pathFile) {
-                        Toast.makeText(Explorador.this, "FILE: " + path, Toast.LENGTH_SHORT).show();
+                        list.add(pathFile.getName().replace(".mp3",""));
+                        listPath.add(path);
+                        save(list, listPath,0);
+                        list = load();
+                        listPath = loadP();
+                        //Toast.makeText(Explorador.this, "FILE: " + list.get(list.size()-1), Toast.LENGTH_SHORT).show();
                     }
                 })
                 .build()
                 .show();
-    }*/
+    }
+
+    //Carga los elementos guardados en preferencias
+    public List<String> load() {
+        // Create new array to be returned
+        List<String> savedSongs = new ArrayList<>();
+
+        // Get the number of saved songs
+        int numOfSavedSongs = myPlaylist.getInt("listSize", 0);
+
+        // Get saved songs by their index
+        for (int i = 0; i < numOfSavedSongs; i++) {
+            savedSongs.add(myPlaylist.getString(String.valueOf(i), ""));
+        }
+
+        return savedSongs;
+    }
+
+    public List<String> loadP() {
+        // Create new array to be returned
+        List<String> savedSongs = new ArrayList<>();
+
+        // Get the number of saved songs
+        int numOfSavedSongs = myPlaylistP.getInt("listSize", 0);
+
+        // Get saved songs by their index
+        for (int i = 0; i < numOfSavedSongs; i++) {
+            savedSongs.add(myPlaylistP.getString(String.valueOf(i), ""));
+        }
+
+        return savedSongs;
+    }
+
+    //Guarda en Preferencias de la Aplicacion
+    public void save(List<String> mySongs, List<String> mySongsP, int primerCarga){
+        // Save the size so that you can retrieve the whole list later
+        if(primerCarga==1 && myPlaylist.getInt("listSize", 0)<=3 ){
+            myEditor.putInt("listSize", mySongs.size());
+            myEditorP.putInt("listSize", mySongs.size());
+
+            for(int i = 0; i < mySongs.size(); i++){
+                // Save each song with its index in the list as a key
+                myEditor.putString(String.valueOf(i), mySongs.get(i));
+                myEditorP.putString(String.valueOf(i), mySongs.get(i));
+            }
+        }else if(primerCarga==0){
+            myEditor.putInt("listSize", mySongs.size());
+            myEditorP.putInt("listSize", mySongs.size());
+
+            for(int i = 0; i < mySongs.size(); i++){
+                // Save each song with its index in the list as a key
+                myEditor.putString(String.valueOf(i), mySongs.get(i));
+                myEditorP.putString(String.valueOf(i), mySongs.get(i));
+            }
+        }
+
+        myEditor.commit();
+        myEditorP.commit();
+    }
+
 
 }
