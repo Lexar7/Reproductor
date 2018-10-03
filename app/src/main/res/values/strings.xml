@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Reproductor</string>
+    <string name="app_name">Cool Music</string>
     <string name="titulo">Seleccione una canción</string>
     <string name="tituloPantalla">Canciones</string>
     <string name="opcAgregar">Agregar Cancion</string>
@@ -10,5 +10,11 @@
 
     <string name="canciones">Canciones</string>
 
+    <string name="acerca">Acerca de</string>
 
+    <string name="Creadores">Creadores</string>
+    <string name="materia">Desarrollo de Aplicaciones Móviles</string>
+    <string name="info">Cool Music es una aplicación móvil que nos permite reproducir música, contiene
+                        por defecto 3 canciones con la opción de poder agregar más canciones a partir
+                        de la memoria interna del teléfono.</string>
 </resources>

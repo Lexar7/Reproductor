@@ -11,7 +11,6 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-
         <activity android:name=".splashActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -19,10 +18,9 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".prueba2" />
-        <activity android:name=".Explorador"/>
-        <activity android:name=".MainActivity"/>
-
+        <activity android:name=".Explorador" />
+        <activity android:name=".Menu" />
+        <activity android:name=".acercaDe"></activity>
     </application>
 
 </manifest>

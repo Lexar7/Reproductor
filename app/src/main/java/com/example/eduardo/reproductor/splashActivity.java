@@ -18,7 +18,7 @@ public class splashActivity extends AppCompatActivity {
             public void run() {
                 finish();
                 if (!botonBackPresionado){
-                    Intent intento = new Intent(splashActivity.this,Explorador.class);
+                    Intent intento = new Intent(splashActivity.this, Menu.class);
                     startActivity(intento);
                 }
             }

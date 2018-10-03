@@ -290,10 +290,12 @@ public class Explorador extends AppCompatActivity {
                 Intent intent = getIntent();
                 finish();
                 startActivity(intent);
+                mp.stop();
                 return true;
 
             case android.R.id.home:
-
+                Intent intent1 = new Intent(this, Menu.class);
+                startActivity(intent1);
                 return true;
 
             default:
@@ -332,16 +334,21 @@ public class Explorador extends AppCompatActivity {
 
     //Metodo para el boton PlayPause
     public void play_pause(View view){
-        if (mp.isPlaying()){
-            mp.pause();
-            play_pause.setBackgroundResource(R.drawable.play);
-            Toast.makeText(this, "Pausa", Toast.LENGTH_SHORT).show();
+        try{
+            if (mp.isPlaying()){
+                mp.pause();
+                play_pause.setBackgroundResource(R.drawable.play);
+                Toast.makeText(this, "Pausa", Toast.LENGTH_SHORT).show();
+            }
+            else {
+                mp.start();
+                play_pause.setBackgroundResource(R.drawable.pause);
+                Toast.makeText(this, "Reproduciendo", Toast.LENGTH_SHORT).show();
+            }
+        }catch (Exception e){
+            Toast.makeText(this, "Seleccione una canción primero", Toast.LENGTH_SHORT).show();
         }
-        else {
-            mp.start();
-            play_pause.setBackgroundResource(R.drawable.pause);
-            Toast.makeText(this, "Reproduciendo", Toast.LENGTH_SHORT).show();
-        }
+
     }
 
 
@@ -395,7 +402,7 @@ public class Explorador extends AppCompatActivity {
                 .withChosenListener(new ChooserDialog.Result() {
                     @Override
                     public void onChoosePath(String path, File pathFile) {
-                        list.add(pathFile.getName().replace(".mp3",""));
+                        list.add(pathFile.getName().replace(".mp3","").replace(".m4a",""));
                         listPath.add(path);
                         save(list, listPath,0);
                         list = load();
