@@ -39,8 +39,8 @@ public class Explorador extends AppCompatActivity {
 
     MediaPlayer mp;
 
-
-    int posicion = 0;
+    Uri u;
+    int posicion;
     Button play_pause, btn_repetir;
     SeekBar positionBar;
     TextView TiempoInicio, TiempoFinal, titulo;
@@ -78,8 +78,10 @@ public class Explorador extends AppCompatActivity {
                 }
 
                 int resID = getResources().getIdentifier(list.get(i), "raw", getPackageName());
+
                 mp = MediaPlayer.create(Explorador.this, resID);
                 mp.start();
+                posicion = i;
                 play_pause.setBackgroundResource(R.drawable.pausa);
                 //Toast.makeText(getApplicationContext(), "Reproduciendo", Toast.LENGTH_SHORT).show();
 
@@ -161,8 +163,8 @@ public class Explorador extends AppCompatActivity {
                     mp.stop();
                     mp.release();
                 }
-                Uri u = Uri.parse(list.get(posicion).toString());
-                mp = MediaPlayer.create(Explorador.this, u);
+                int resID = getResources().getIdentifier(list.get(posicion), "raw", getPackageName());
+                mp = MediaPlayer.create(getApplicationContext(), resID);
                 mp.start();
                 play_pause.setBackgroundResource(R.drawable.pausa);
 
@@ -174,7 +176,7 @@ public class Explorador extends AppCompatActivity {
                     mp.release();
                 }
                 int id2 = getResources().getIdentifier(list.get(posicion), "raw", getPackageName());
-                mp = MediaPlayer.create(Explorador.this, id2);
+                mp = MediaPlayer.create(getApplicationContext(), id2);
                 mp.pause();
                 play_pause.setBackgroundResource(R.drawable.reproducir);
 
@@ -186,7 +188,7 @@ public class Explorador extends AppCompatActivity {
                     mp.release();
                 }
                 int id3 = getResources().getIdentifier(list.get(posicion), "raw", getPackageName());
-                mp = MediaPlayer.create(Explorador.this, id3);
+                mp = MediaPlayer.create(getApplicationContext(), id3);
                 mp.stop();
 
                 play_pause.setBackgroundResource(R.drawable.reproducir);
@@ -245,9 +247,9 @@ public class Explorador extends AppCompatActivity {
     public void Siguiente(View view){
         mp.stop();
         mp.release();
-        posicion = (posicion + 1)%list.size();
-        int u = getResources().getIdentifier(list.get(posicion), "raw", getPackageName());
-        mp = MediaPlayer.create(getApplicationContext(), u);
+        posicion = (posicion + 1)%list.size();;
+        int resID = getResources().getIdentifier(list.get(posicion), "raw", getPackageName());
+        mp = MediaPlayer.create(getApplicationContext(), resID);
         mp.start();
 
     }
@@ -257,14 +259,8 @@ public class Explorador extends AppCompatActivity {
         mp.stop();
         mp.release();
         posicion = (posicion - 1 < 0)? list.size() - 1: posicion-1;
-                /*if(position - 1 < 0 ){
-                    position = mySongs.size()-1;
-                }
-                else {
-                    position = position - 1;
-                }*/
-        int u = getResources().getIdentifier(list.get(posicion), "raw", getPackageName());
-        mp = MediaPlayer.create(getApplicationContext(), u);
+        int resID = getResources().getIdentifier(list.get(posicion), "raw", getPackageName());
+        mp = MediaPlayer.create(getApplicationContext(), resID);
         mp.start();
     }
 
