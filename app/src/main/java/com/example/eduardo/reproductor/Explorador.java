@@ -341,21 +341,21 @@ public class Explorador extends AppCompatActivity {
         // Save the size so that you can retrieve the whole list later
         if(primerCarga==1 && myPlaylist.getInt("listSize", 0)<=3 ){
             myEditor.putInt("listSize", mySongs.size());
-            myEditorP.putInt("listSize", mySongs.size());
+            myEditorP.putInt("listSize", mySongsP.size());
 
             for(int i = 0; i < mySongs.size(); i++){
                 // Save each song with its index in the list as a key
                 myEditor.putString(String.valueOf(i), mySongs.get(i));
-                myEditorP.putString(String.valueOf(i), mySongs.get(i));
+                myEditorP.putString(String.valueOf(i), mySongsP.get(i));
             }
         }else if(primerCarga==0){
             myEditor.putInt("listSize", mySongs.size());
-            myEditorP.putInt("listSize", mySongs.size());
+            myEditorP.putInt("listSize", mySongsP.size());
 
             for(int i = 0; i < mySongs.size(); i++){
                 // Save each song with its index in the list as a key
                 myEditor.putString(String.valueOf(i), mySongs.get(i));
-                myEditorP.putString(String.valueOf(i), mySongs.get(i));
+                myEditorP.putString(String.valueOf(i), mySongsP.get(i));
             }
         }
 
