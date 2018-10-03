@@ -142,49 +142,8 @@ public class Explorador extends AppCompatActivity {
 
 
                 //////////////////////////////////
+                actualizarBar();
 
-                mp.seekTo(0);
-                totalTime = mp.getDuration();
-
-                //Position Bar
-                positionBar = (SeekBar)findViewById(R.id.positionBar);
-                positionBar.setMax(totalTime);
-                positionBar.setOnSeekBarChangeListener(
-                        new SeekBar.OnSeekBarChangeListener() {
-                            @Override
-                            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                                if(fromUser){
-                                    mp.seekTo(progress);
-                                    positionBar.setProgress(progress);
-                                }
-                            }
-
-                            @Override
-                            public void onStartTrackingTouch(SeekBar seekBar) {
-
-                            }
-
-                            @Override
-                            public void onStopTrackingTouch(SeekBar seekBar) {
-
-                            }
-                        });
-
-                //Actualizar positionBar y labels
-                new Thread(new Runnable() {
-                    @Override
-                    public void run() {
-                        while(mp != null){
-                            try{
-                                Message msg = new Message();
-                                msg.what = mp.getCurrentPosition();
-                                handler.sendMessage(msg);
-                                Thread.sleep(1000);
-                            } catch (InterruptedException e){
-                            }
-                        }
-                    }
-                }).start();
             }
         });
 
@@ -193,7 +152,6 @@ public class Explorador extends AppCompatActivity {
     @Override
     public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
         super.onCreateContextMenu(menu, v, menuInfo);
-
 
         final MenuInflater inflater = getMenuInflater();
 
@@ -211,32 +169,36 @@ public class Explorador extends AppCompatActivity {
         switch (item.getItemId()){
           //Reproducir
             case R.id.CtxtstOpc1:
-                if(posicion<3){
-                    int resID = getResources().getIdentifier(list.get(posicion), "raw", getPackageName());
-
+                if(mp != null ){
+                    mp.stop();
+                    mp.release();
+                }
+                if(info.position < 3){
+                    int resID = getResources().getIdentifier(list.get(info.position), "raw", getPackageName());
+                    int index = info.position;
                     mp = MediaPlayer.create(Explorador.this, resID);
                     mp.start();
                 }
                 else{
-                    mp = MediaPlayer.create(getApplicationContext(), Uri.parse("/"+listPath.get(posicion)));
+                    mp = MediaPlayer.create(getApplicationContext(), Uri.parse("/"+listPath.get(info.position)));
                     mp.start();
                 }
                 play_pause.setBackgroundResource(R.drawable.pause);
 
+                posicion = info.position;
+                actualizarBar();
                 //Poner el nombre de la cancion
                 titulo.setText(listaCanciones.getItemAtPosition(posicion).toString());
                 return true;
             //Pausar
             case R.id.CtxtstOpc2:
-                if(mp != null ){
-                    mp.stop();
-                    mp.release();
+                if(mp.isPlaying()){
+                    mp.pause();
+                    play_pause.setBackgroundResource(R.drawable.play);
                 }
-                int id2 = getResources().getIdentifier(list.get(posicion), "raw", getPackageName());
-                mp = MediaPlayer.create(getApplicationContext(), id2);
-                mp.pause();
-                play_pause.setBackgroundResource(R.drawable.play);
+                posicion = info.position;
 
+                titulo.setText(listaCanciones.getItemAtPosition(posicion).toString());
                 return true;
             //Detener
             case R.id.CtxtstOpc3:
@@ -244,20 +206,22 @@ public class Explorador extends AppCompatActivity {
                     mp.stop();
                     mp.release();
                 }
-                if(posicion<3){
+                if(info.position < 3){
                     int resID = getResources().getIdentifier(list.get(posicion), "raw", getPackageName());
 
                     mp = MediaPlayer.create(Explorador.this, resID);
-
+                    mp.stop();
                 }
                 else{
-                    mp = MediaPlayer.create(getApplicationContext(), Uri.parse("/"+listPath.get(posicion)));
+                    mp = MediaPlayer.create(getApplicationContext(), Uri.parse("/"+listPath.get(info.position)));
+                    mp.stop();
                 }
-                mp.stop();
-
+                actualizarBar();
+                titulo.setText("Titulo");
                 play_pause.setBackgroundResource(R.drawable.play);
 
                 return true;
+
             default:
                 return super.onContextItemSelected(item);
         }
@@ -371,6 +335,7 @@ public class Explorador extends AppCompatActivity {
         titulo.setText(listaCanciones.getItemAtPosition(posicion).toString());
 
         mp.start();
+        actualizarBar();
 
     }
 
@@ -392,6 +357,7 @@ public class Explorador extends AppCompatActivity {
         play_pause.setBackgroundResource(R.drawable.pause);
         titulo.setText(listaCanciones.getItemAtPosition(posicion).toString());
         mp.start();
+        actualizarBar();
     }
 
     //Metodo para buscar archivos
@@ -476,7 +442,52 @@ public class Explorador extends AppCompatActivity {
 
         myEditor.commit();
         myEditorP.commit();
-    }
+        }
+
+        public void actualizarBar(){
+            mp.seekTo(0);
+            totalTime = mp.getDuration();
+
+            //Position Bar
+            positionBar = (SeekBar)findViewById(R.id.positionBar);
+            positionBar.setMax(totalTime);
+            positionBar.setOnSeekBarChangeListener(
+                    new SeekBar.OnSeekBarChangeListener() {
+                        @Override
+                        public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                            if(fromUser){
+                                mp.seekTo(progress);
+                                positionBar.setProgress(progress);
+                            }
+                        }
+
+                        @Override
+                        public void onStartTrackingTouch(SeekBar seekBar) {
+
+                        }
+
+                        @Override
+                        public void onStopTrackingTouch(SeekBar seekBar) {
+
+                        }
+                    });
+
+            //Actualizar positionBar y labels
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    while(mp != null){
+                        try{
+                            Message msg = new Message();
+                            msg.what = mp.getCurrentPosition();
+                            handler.sendMessage(msg);
+                            Thread.sleep(1000);
+                        } catch (InterruptedException e){
+                        }
+                    }
+                }
+            }).start();
+        }
 
     }
 
