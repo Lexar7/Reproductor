@@ -19,7 +19,7 @@
         app:layout_constraintHorizontal_bias="0.574"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/portada1" />
+        />
 
     <Button
         android:id="@+id/btn_play"

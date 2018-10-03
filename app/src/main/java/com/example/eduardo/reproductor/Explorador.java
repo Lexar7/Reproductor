@@ -1,7 +1,9 @@
 package com.example.eduardo.reproductor;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Environment;
@@ -12,9 +14,12 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.TextPaint;
 import android.view.ContextMenu;
+import android.view.LayoutInflater;
+import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -23,6 +28,7 @@ import android.widget.ListView;
 import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.support.v7.widget.Toolbar;
 
 //import com.obsez.android.lib.filechooser.ChooserDialog;
 
@@ -56,6 +62,8 @@ public class Explorador extends AppCompatActivity {
     private SharedPreferences myPlaylistP;
     private SharedPreferences.Editor myEditorP;
 
+    private Toolbar toolbar;
+
 
     Button play_pause, btn_repetir;
     SeekBar positionBar;
@@ -66,6 +74,9 @@ public class Explorador extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_explorador);
+
+        this.setTitle("Canciones");
+
 
         myPlaylist = getSharedPreferences(fileName, 0);
         myEditor = myPlaylist.edit();
@@ -78,6 +89,9 @@ public class Explorador extends AppCompatActivity {
         TiempoFinal = (TextView)findViewById(R.id.txtTiempoFinal);
         titulo = (TextView)findViewById(R.id.txtTitulo);
 
+        toolbar = (Toolbar)findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
 
         list = new ArrayList<>();
@@ -120,7 +134,7 @@ public class Explorador extends AppCompatActivity {
                 }
                 mp.start();
                 posicion = i;
-                play_pause.setBackgroundResource(R.drawable.pausa);
+                play_pause.setBackgroundResource(R.drawable.pause);
                 //Toast.makeText(getApplicationContext(), "Reproduciendo", Toast.LENGTH_SHORT).show();
 
                 //Poner el nombre de la cancion
@@ -207,7 +221,7 @@ public class Explorador extends AppCompatActivity {
                     mp = MediaPlayer.create(getApplicationContext(), Uri.parse("/"+listPath.get(posicion)));
                     mp.start();
                 }
-                play_pause.setBackgroundResource(R.drawable.pausa);
+                play_pause.setBackgroundResource(R.drawable.pause);
 
                 //Poner el nombre de la cancion
                 titulo.setText(listaCanciones.getItemAtPosition(posicion).toString());
@@ -221,7 +235,7 @@ public class Explorador extends AppCompatActivity {
                 int id2 = getResources().getIdentifier(list.get(posicion), "raw", getPackageName());
                 mp = MediaPlayer.create(getApplicationContext(), id2);
                 mp.pause();
-                play_pause.setBackgroundResource(R.drawable.reproducir);
+                play_pause.setBackgroundResource(R.drawable.play);
 
                 return true;
             //Detener
@@ -241,7 +255,7 @@ public class Explorador extends AppCompatActivity {
                 }
                 mp.stop();
 
-                play_pause.setBackgroundResource(R.drawable.reproducir);
+                play_pause.setBackgroundResource(R.drawable.play);
 
                 return true;
             default:
@@ -249,6 +263,44 @@ public class Explorador extends AppCompatActivity {
         }
 
     }
+
+    ////////MENU DOS//////////
+
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.menu2, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        switch (item.getItemId()){
+            case R.id.Nueva:
+                openFile();
+                return true;
+
+            case R.id.Salir:
+                finish();
+                mp.stop();
+                return true;
+
+            case R.id.Update:
+                Intent intent = getIntent();
+                finish();
+                startActivity(intent);
+                return true;
+
+            case android.R.id.home:
+
+                return true;
+
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
 
 
 
@@ -282,12 +334,12 @@ public class Explorador extends AppCompatActivity {
     public void play_pause(View view){
         if (mp.isPlaying()){
             mp.pause();
-            play_pause.setBackgroundResource(R.drawable.reproducir);
+            play_pause.setBackgroundResource(R.drawable.play);
             Toast.makeText(this, "Pausa", Toast.LENGTH_SHORT).show();
         }
         else {
             mp.start();
-            play_pause.setBackgroundResource(R.drawable.pausa);
+            play_pause.setBackgroundResource(R.drawable.pause);
             Toast.makeText(this, "Reproduciendo", Toast.LENGTH_SHORT).show();
         }
     }
@@ -308,6 +360,7 @@ public class Explorador extends AppCompatActivity {
             mp = MediaPlayer.create(getApplicationContext(), Uri.parse("/"+listPath.get(posicion)));
         }
         //Poner el nombre de la cancion
+        play_pause.setBackgroundResource(R.drawable.pause);
         titulo.setText(listaCanciones.getItemAtPosition(posicion).toString());
 
         mp.start();
@@ -329,12 +382,13 @@ public class Explorador extends AppCompatActivity {
             mp = MediaPlayer.create(getApplicationContext(), Uri.parse("/"+listPath.get(posicion)));
         }
         //Poner el nombre de la cancion
+        play_pause.setBackgroundResource(R.drawable.pause);
         titulo.setText(listaCanciones.getItemAtPosition(posicion).toString());
         mp.start();
     }
 
     //Metodo para buscar archivos
-    public void openFile(View view){
+    public void openFile(){
         new ChooserDialog().with(this)
                 .withFilter(false, false, "mp3", "wma", "wav", "m4a")// para agregar mas formatos solo agregar un nuevo elemento despues de "wav" eje: "wav", "mp4" ....
                 .withStartFile(Environment.getExternalStorageDirectory().getPath()) // ruta en la que inicia el buscador
@@ -358,11 +412,6 @@ public class Explorador extends AppCompatActivity {
 
     }
 
-    public void update(View view){
-        Intent intent = getIntent();
-        finish();
-        startActivity(intent);
-    }
 
     //Carga los elementos guardados en preferencias
     public List<String> load() {

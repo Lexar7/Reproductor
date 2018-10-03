@@ -45,7 +45,7 @@ public class MainActivity extends AppCompatActivity {
         }
         else {
             vectormp[posicion].start();
-            play_pause.setBackgroundResource(R.drawable.pausa);
+
             Toast.makeText(this, "Reproduciendo", Toast.LENGTH_SHORT).show();
         }
     }
@@ -61,7 +61,7 @@ public class MainActivity extends AppCompatActivity {
             posicion = 0;
 
             play_pause.setBackgroundResource(R.drawable.reproducir);
-            iv.setImageResource(R.drawable.portada1);
+
             Toast.makeText(this, "Stop", Toast.LENGTH_SHORT).show();
         }
     }
@@ -91,24 +91,12 @@ public class MainActivity extends AppCompatActivity {
                 posicion++;
                 vectormp[posicion].start();
 
-                if (posicion == 0){
-                    iv.setImageResource(R.drawable.portada1);
-                } else if(posicion == 1){
-                    iv.setImageResource(R.drawable.portada2);
-                } else if(posicion == 2){
-                    iv.setImageResource(R.drawable.portada3);
-                }
+
             }
             else {
                 posicion++;
 
-                if (posicion == 0){
-                    iv.setImageResource(R.drawable.portada1);
-                } else if(posicion == 1){
-                    iv.setImageResource(R.drawable.portada2);
-                } else if(posicion == 2){
-                    iv.setImageResource(R.drawable.portada3);
-                }
+
             }
 
         }
@@ -128,24 +116,12 @@ public class MainActivity extends AppCompatActivity {
                 //vectormp[2] = MediaPlayer.create(this, R.raw.tea);
                 posicion--;
 
-                if (posicion == 0){
-                    iv.setImageResource(R.drawable.portada1);
-                } else if(posicion == 1){
-                    iv.setImageResource(R.drawable.portada2);
-                } else if(posicion == 2){
-                    iv.setImageResource(R.drawable.portada3);
-                }
+
                 vectormp[posicion].start();
 
             }else{
                 posicion--;
-                if (posicion == 0){
-                    iv.setImageResource(R.drawable.portada1);
-                } else if(posicion == 1){
-                    iv.setImageResource(R.drawable.portada2);
-                } else if(posicion == 2){
-                    iv.setImageResource(R.drawable.portada3);
-                }
+
             }
 
         }

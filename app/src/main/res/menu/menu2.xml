@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item android:title=""
+        android:id="@+id/Update"
+        android:icon="@drawable/update"
+        android:orderInCategory="5"
+        app:showAsAction="always" >
+    </item>
+
+    <item android:title=""
+        android:id="@+id/Opciones"
+        android:icon="@drawable/menu"
+        android:orderInCategory="5"
+        app:showAsAction="always" >
+        <menu>
+            <item android:id="@+id/Nueva"
+                android:title="Agregar Nueva Canción" />
+            <item android:id="@+id/Salir"
+                android:title="Salir"/>
+        </menu>
+    </item>
+</menu>
