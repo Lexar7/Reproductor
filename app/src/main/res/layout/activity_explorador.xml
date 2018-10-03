@@ -124,6 +124,7 @@
         android:layout_marginStart="8dp"
         android:layout_marginTop="12dp"
         android:background="@drawable/back"
+        android:onClick="update"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 

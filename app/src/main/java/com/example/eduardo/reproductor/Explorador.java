@@ -1,5 +1,6 @@
 package com.example.eduardo.reproductor;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.media.MediaPlayer;
 import android.net.Uri;
@@ -9,6 +10,7 @@ import android.os.Message;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.TextPaint;
 import android.view.ContextMenu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -39,6 +41,8 @@ public class Explorador extends AppCompatActivity {
     List<String> list;
     List<String> listPath;
     ListAdapter adapter;
+    ArrayAdapter<String> adapterUpdate;
+
 
     MediaPlayer mp;
 
@@ -74,6 +78,8 @@ public class Explorador extends AppCompatActivity {
         TiempoFinal = (TextView)findViewById(R.id.txtTiempoFinal);
         titulo = (TextView)findViewById(R.id.txtTitulo);
 
+
+
         list = new ArrayList<>();
         listPath = new ArrayList<>();
 
@@ -85,8 +91,12 @@ public class Explorador extends AppCompatActivity {
         save(list, listPath,1);
         listPath=loadP();
         list = load();
-        adapter = new ArrayAdapter<>(this, R.layout.list_view_configuracion, list);
-        listaCanciones.setAdapter(adapter);
+
+
+        adapterUpdate = new ArrayAdapter<String>(this, R.layout.list_view_configuracion, list);
+        listaCanciones.setAdapter(adapterUpdate);
+
+
 
         registerForContextMenu(listaCanciones);
 
@@ -187,18 +197,15 @@ public class Explorador extends AppCompatActivity {
         switch (item.getItemId()){
           //Reproducir
             case R.id.CtxtstOpc1:
-                if(mp != null ){
-                    mp.stop();
-                    mp.release();
-                }
                 if(posicion<3){
                     int resID = getResources().getIdentifier(list.get(posicion), "raw", getPackageName());
 
                     mp = MediaPlayer.create(Explorador.this, resID);
-
+                    mp.start();
                 }
                 else{
                     mp = MediaPlayer.create(getApplicationContext(), Uri.parse("/"+listPath.get(posicion)));
+                    mp.start();
                 }
                 play_pause.setBackgroundResource(R.drawable.pausa);
 
@@ -328,10 +335,8 @@ public class Explorador extends AppCompatActivity {
 
     //Metodo para buscar archivos
     public void openFile(View view){
-
-
         new ChooserDialog().with(this)
-                .withFilter(false, false, "mp3", "wma", "wav", "jpg")// para agregar mas formatos solo agregar un nuevo elemento despues de "wav" eje: "wav", "mp4" ....
+                .withFilter(false, false, "mp3", "wma", "wav", "m4a")// para agregar mas formatos solo agregar un nuevo elemento despues de "wav" eje: "wav", "mp4" ....
                 .withStartFile(Environment.getExternalStorageDirectory().getPath()) // ruta en la que inicia el buscador
                 .withChosenListener(new ChooserDialog.Result() {
                     @Override
@@ -342,11 +347,21 @@ public class Explorador extends AppCompatActivity {
                         list = load();
                         listPath = loadP();
 
-                       // Toast.makeText(Explorador.this, "FILE: " + path, Toast.LENGTH_SHORT).show();
+                        adapterUpdate.notifyDataSetChanged();
+                        //listaCanciones.setAdapter(adapterUpdate);
+                        //Toast.makeText(Explorador.this, "FILE: " + list.get(list.size()-1), Toast.LENGTH_SHORT).show();
+
                     }
                 })
                 .build()
                 .show();
+
+    }
+
+    public void update(View view){
+        Intent intent = getIntent();
+        finish();
+        startActivity(intent);
     }
 
     //Carga los elementos guardados en preferencias
