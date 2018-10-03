@@ -1,5 +1,7 @@
 package com.example.eduardo.reproductor;
 
+import android.app.Application;
+import android.content.SharedPreferences;
 import android.media.MediaPlayer;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -7,6 +9,8 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.Toast;
+
+import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -23,9 +27,9 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        play_pause = (Button)findViewById(R.id.btn_play);
-        btn_repetir = (Button)findViewById(R.id.btn_repetir);
-        iv = (ImageView)findViewById(R.id.imageView);
+        play_pause = findViewById(R.id.btn_play);
+        btn_repetir =  findViewById(R.id.btn_repetir);
+        iv = findViewById(R.id.imageView);
 
         //vectormp[0] = MediaPlayer.create(this, R.raw.race);
         //vectormp[1] = MediaPlayer.create(this, R.raw.sound);
@@ -149,5 +153,7 @@ public class MainActivity extends AppCompatActivity {
             Toast.makeText(this, "No hay más canciones", Toast.LENGTH_SHORT).show();
         }
     }
+
+
 }
 
