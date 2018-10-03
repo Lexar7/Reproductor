@@ -4,4 +4,9 @@
     <string name="tituloPantalla">Canciones</string>
     <string name="opcAgregar">Agregar Cancion</string>
 
+    <string name="amanda">Amanda Castro</string>
+    <string name="caro">Carolina Rodríguez</string>
+    <string name="eduardo">Eduardo Noyola</string>
+
+
 </resources>

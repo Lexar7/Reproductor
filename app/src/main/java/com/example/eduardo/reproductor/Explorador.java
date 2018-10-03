@@ -6,7 +6,6 @@ import android.net.Uri;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
-import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.ContextMenu;
@@ -38,7 +37,6 @@ public class Explorador extends AppCompatActivity {
     List<String> listPath;
     ListAdapter adapter;
 
-    //PlayList playList;
     MediaPlayer mp;
 
     //Shared Preferences
@@ -61,7 +59,6 @@ public class Explorador extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_explorador);
 
-        //playList= new PlayList();
         myPlaylist = getSharedPreferences(fileName, 0);
         myEditor = myPlaylist.edit();
         myPlaylistP = getSharedPreferences(fileNamePath, 0);
@@ -98,7 +95,6 @@ public class Explorador extends AppCompatActivity {
                 }
 
                 int resID = getResources().getIdentifier(list.get(i), "raw", getPackageName());
-
                 mp = MediaPlayer.create(Explorador.this, resID);
                 mp.start();
                 play_pause.setBackgroundResource(R.drawable.pausa);
@@ -114,7 +110,7 @@ public class Explorador extends AppCompatActivity {
                 totalTime = mp.getDuration();
 
                 //Position Bar
-                positionBar =  findViewById(R.id.positionBar);
+                positionBar = (SeekBar)findViewById(R.id.positionBar);
                 positionBar.setMax(totalTime);
                 positionBar.setOnSeekBarChangeListener(
                         new SeekBar.OnSeekBarChangeListener() {
@@ -178,37 +174,47 @@ public class Explorador extends AppCompatActivity {
         switch (item.getItemId()){
           //Reproducir
             case R.id.CtxtstOpc1:
-                Mensaje();
+                if(mp != null ){
+                    mp.stop();
+                    mp.release();
+                }
+                Uri u = Uri.parse(list.get(posicion).toString());
+                mp = MediaPlayer.create(Explorador.this, u);
+                mp.start();
+                play_pause.setBackgroundResource(R.drawable.pausa);
+
                 return true;
             //Pausar
             case R.id.CtxtstOpc2:
-                Mensaje();
+                if(mp != null ){
+                    mp.stop();
+                    mp.release();
+                }
+                int id2 = getResources().getIdentifier(list.get(posicion), "raw", getPackageName());
+                mp = MediaPlayer.create(Explorador.this, id2);
+                mp.pause();
+                play_pause.setBackgroundResource(R.drawable.reproducir);
+
                 return true;
             //Detener
             case R.id.CtxtstOpc3:
-                Mensaje();
+                if(mp != null ){
+                    mp.stop();
+                    mp.release();
+                }
+                int id3 = getResources().getIdentifier(list.get(posicion), "raw", getPackageName());
+                mp = MediaPlayer.create(Explorador.this, id3);
+                mp.stop();
+
+                play_pause.setBackgroundResource(R.drawable.reproducir);
+
                 return true;
             default:
                 return super.onContextItemSelected(item);
         }
 
     }
-    public void Mensaje()
-    {
-        Toast toast = Toast.makeText(this, "Menu Opcion", Toast.LENGTH_SHORT);
-        toast.show();
-    }
-    public void Reproducir(){
 
-    }
-    public void Pausar(){
-
-    }
-    public void Detener(){
-
-    }
-
-  //////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
     private Handler handler = new Handler(){
@@ -357,5 +363,6 @@ public class Explorador extends AppCompatActivity {
         myEditorP.commit();
     }
 
+    }
 
-}
+
