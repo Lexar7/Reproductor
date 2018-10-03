@@ -6,6 +6,7 @@ import android.net.Uri;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.ContextMenu;
@@ -98,9 +99,15 @@ public class Explorador extends AppCompatActivity {
                     mp.release();
                 }
 
-                int resID = getResources().getIdentifier(list.get(i), "raw", getPackageName());
+                if(i<3){
+                    int resID = getResources().getIdentifier(list.get(i), "raw", getPackageName());
 
-                mp = MediaPlayer.create(Explorador.this, resID);
+                    mp = MediaPlayer.create(Explorador.this, resID);
+
+                }
+                else{
+                    mp = MediaPlayer.create(getApplicationContext(), Uri.parse("/"+listPath.get(i)));
+                }
                 mp.start();
                 posicion = i;
                 play_pause.setBackgroundResource(R.drawable.pausa);
@@ -184,11 +191,19 @@ public class Explorador extends AppCompatActivity {
                     mp.stop();
                     mp.release();
                 }
-                int resID = getResources().getIdentifier(list.get(posicion), "raw", getPackageName());
-                mp = MediaPlayer.create(getApplicationContext(), resID);
-                mp.start();
+                if(posicion<3){
+                    int resID = getResources().getIdentifier(list.get(posicion), "raw", getPackageName());
+
+                    mp = MediaPlayer.create(Explorador.this, resID);
+
+                }
+                else{
+                    mp = MediaPlayer.create(getApplicationContext(), Uri.parse("/"+listPath.get(posicion)));
+                }
                 play_pause.setBackgroundResource(R.drawable.pausa);
 
+                //Poner el nombre de la cancion
+                titulo.setText(listaCanciones.getItemAtPosition(posicion).toString());
                 return true;
             //Pausar
             case R.id.CtxtstOpc2:
@@ -208,8 +223,15 @@ public class Explorador extends AppCompatActivity {
                     mp.stop();
                     mp.release();
                 }
-                int id3 = getResources().getIdentifier(list.get(posicion), "raw", getPackageName());
-                mp = MediaPlayer.create(getApplicationContext(), id3);
+                if(posicion<3){
+                    int resID = getResources().getIdentifier(list.get(posicion), "raw", getPackageName());
+
+                    mp = MediaPlayer.create(Explorador.this, resID);
+
+                }
+                else{
+                    mp = MediaPlayer.create(getApplicationContext(), Uri.parse("/"+listPath.get(posicion)));
+                }
                 mp.stop();
 
                 play_pause.setBackgroundResource(R.drawable.reproducir);
@@ -269,8 +291,18 @@ public class Explorador extends AppCompatActivity {
         mp.stop();
         mp.release();
         posicion = (posicion + 1)%list.size();;
-        int resID = getResources().getIdentifier(list.get(posicion), "raw", getPackageName());
-        mp = MediaPlayer.create(getApplicationContext(), resID);
+        if(posicion<3){
+            int resID = getResources().getIdentifier(list.get(posicion), "raw", getPackageName());
+
+            mp = MediaPlayer.create(Explorador.this, resID);
+
+        }
+        else{
+            mp = MediaPlayer.create(getApplicationContext(), Uri.parse("/"+listPath.get(posicion)));
+        }
+        //Poner el nombre de la cancion
+        titulo.setText(listaCanciones.getItemAtPosition(posicion).toString());
+
         mp.start();
 
     }
@@ -280,13 +312,24 @@ public class Explorador extends AppCompatActivity {
         mp.stop();
         mp.release();
         posicion = (posicion - 1 < 0)? list.size() - 1: posicion-1;
-        int resID = getResources().getIdentifier(list.get(posicion), "raw", getPackageName());
-        mp = MediaPlayer.create(getApplicationContext(), resID);
+        if(posicion<3){
+            int resID = getResources().getIdentifier(list.get(posicion), "raw", getPackageName());
+
+            mp = MediaPlayer.create(Explorador.this, resID);
+
+        }
+        else{
+            mp = MediaPlayer.create(getApplicationContext(), Uri.parse("/"+listPath.get(posicion)));
+        }
+        //Poner el nombre de la cancion
+        titulo.setText(listaCanciones.getItemAtPosition(posicion).toString());
         mp.start();
     }
 
     //Metodo para buscar archivos
     public void openFile(View view){
+
+
         new ChooserDialog().with(this)
                 .withFilter(false, false, "mp3", "wma", "wav", "jpg")// para agregar mas formatos solo agregar un nuevo elemento despues de "wav" eje: "wav", "mp4" ....
                 .withStartFile(Environment.getExternalStorageDirectory().getPath()) // ruta en la que inicia el buscador
@@ -298,7 +341,8 @@ public class Explorador extends AppCompatActivity {
                         save(list, listPath,0);
                         list = load();
                         listPath = loadP();
-                        //Toast.makeText(Explorador.this, "FILE: " + list.get(list.size()-1), Toast.LENGTH_SHORT).show();
+
+                       // Toast.makeText(Explorador.this, "FILE: " + path, Toast.LENGTH_SHORT).show();
                     }
                 })
                 .build()
